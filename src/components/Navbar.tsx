@@ -9,6 +9,9 @@ export const Navbar = () => {
           SNEAKER SPOT
         </Link>
         <div className="flex items-center gap-6">
+          <Link to="/" className="font-body text-sm text-muted-foreground transition-colors hover:text-foreground">
+            Home
+          </Link>
           <Link to="/collections/sneakers" className="font-body text-sm text-muted-foreground transition-colors hover:text-foreground">
             Sneakers
           </Link>
