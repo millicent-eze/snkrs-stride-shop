@@ -8,6 +8,9 @@ import Index from "./pages/Index";
 import ProductDetail from "./pages/ProductDetail";
 import SneakersCollection from "./pages/SneakersCollection";
 import TShirtsCollection from "./pages/TShirtsCollection";
+import SearchResults from "./pages/SearchResults";
+import Auth from "./pages/Auth";
+import ResetPassword from "./pages/ResetPassword";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -21,6 +24,9 @@ const AppContent = () => {
         <Route path="/product/:handle" element={<ProductDetail />} />
         <Route path="/collections/sneakers" element={<SneakersCollection />} />
         <Route path="/collections/t-shirts" element={<TShirtsCollection />} />
+        <Route path="/search" element={<SearchResults />} />
+        <Route path="/auth" element={<Auth />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
