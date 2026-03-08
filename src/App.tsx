@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useCartSync } from "@/hooks/useCartSync";
 import Index from "./pages/Index";
 import ProductDetail from "./pages/ProductDetail";
+import TShirtsCollection from "./pages/TShirtsCollection";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
