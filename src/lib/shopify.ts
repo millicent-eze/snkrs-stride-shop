@@ -3,7 +3,7 @@ import { toast } from "sonner";
 const SHOPIFY_API_VERSION = '2025-07';
 const SHOPIFY_STORE_PERMANENT_DOMAIN = 'sneaker-spot-qxsg3.myshopify.com';
 const SHOPIFY_STOREFRONT_URL = `https://${SHOPIFY_STORE_PERMANENT_DOMAIN}/api/${SHOPIFY_API_VERSION}/graphql.json`;
-const SHOPIFY_STOREFRONT_TOKEN = '9ce74ebc05443912f2e09f26451d4c43';
+const SHOPIFY_STOREFRONT_TOKEN = import.meta.env.VITE_SHOPIFY_STOREFRONT_TOKEN ?? '9ce74ebc05443912f2e09f26451d4c43';
 
 export interface ShopifyProduct {
   node: {
