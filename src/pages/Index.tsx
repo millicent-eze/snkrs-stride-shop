@@ -16,8 +16,22 @@ const Index = () => {
       <main className="min-h-screen bg-background">
         <HeroSection />
 
+        {/* Bio Section */}
+        <section className="container mx-auto px-4 py-16 text-center">
+          <p className="font-body text-sm tracking-[0.3em] text-accent mb-3">WHO WE ARE</p>
+          <h2 className="font-display text-3xl font-bold text-foreground md:text-4xl mb-6">
+            MORE THAN JUST A STORE
+          </h2>
+          <p className="mx-auto max-w-2xl font-body text-base leading-relaxed text-muted-foreground md:text-lg">
+            At <span className="text-foreground font-medium">Sneaker Spot</span>, we live and breathe street style. 
+            From heat-on-your-feet kicks to designer tees that turn heads — we curate the freshest drops 
+            so you never have to settle for basic. Whether you're flexing at the function or keeping it 
+            casual, we've got the drip to match your energy. 🔥
+          </p>
+        </section>
+
         {/* Category Showcase */}
-        <section className="container mx-auto px-4 py-16">
+        <section className="container mx-auto px-4 pb-16">
           <div className="mb-10 text-center">
             <p className="font-body text-sm tracking-[0.3em] text-accent mb-2">WHAT WE OFFER</p>
             <h2 className="font-display text-3xl font-bold text-foreground md:text-4xl">
