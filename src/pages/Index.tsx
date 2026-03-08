@@ -5,7 +5,7 @@ import { useProducts } from "@/hooks/useProducts";
 import { Loader2 } from "lucide-react";
 
 const Index = () => {
-  const { data: products, isLoading } = useProducts();
+  const { data: products, isLoading } = useProducts(20, "product_type:sneakers OR tag:sneakers NOT product_type:t-shirt NOT tag:t-shirt");
 
   return (
     <>
