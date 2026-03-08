@@ -10,7 +10,10 @@ export const Navbar = () => {
         </Link>
         <div className="flex items-center gap-6">
           <Link to="/" className="font-body text-sm text-muted-foreground transition-colors hover:text-foreground">
-            Shop
+            Sneakers
+          </Link>
+          <Link to="/collections/t-shirts" className="font-body text-sm text-muted-foreground transition-colors hover:text-foreground">
+            T-Shirts
           </Link>
           <CartDrawer />
         </div>
