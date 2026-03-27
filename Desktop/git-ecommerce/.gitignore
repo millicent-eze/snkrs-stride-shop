@@ -6,4 +6,7 @@ desktop.ini
 *.pem
 *.key
 
-# Only track files inside this project folder
+# Allow GitHub Actions workflow
+!.github/
+!.github/workflows/
+!.github/workflows/deploy.yml
