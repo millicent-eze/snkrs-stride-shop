@@ -1,0 +1,9 @@
+# Windows system files
+desktop.ini
+*.lnk
+
+# Private keys - never commit these!
+*.pem
+*.key
+
+# Only track files inside this project folder
