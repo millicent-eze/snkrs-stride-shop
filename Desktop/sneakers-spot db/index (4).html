@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sneaker Store</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --bg: #0d0d1a; --accent: #c084fc; --accent2: #f472b6; --text: #f0f0f0; --muted: #a0a0c0; --card: rgba(255,255,255,0.04); --border: rgba(192,132,252,0.15); }
+    body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; min-height: 100vh; }
+
+    /* NAV */
+    nav { display: flex; align-items: center; justify-content: space-between; padding: 1.2rem 2rem; border-bottom: 1px solid var(--border); }
+    .logo { font-family: 'Syne', sans-serif; font-size: 1.3rem; font-weight: 800; background: linear-gradient(135deg, #c084fc, #f472b6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .nav-status { font-size: 0.8rem; color: var(--muted); }
+    .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #4ade80; margin-right: 6px; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+    /* HERO */
+    .hero { text-align: center; padding: 4rem 2rem 3rem; }
+    .hero h1 { font-family: 'Syne', sans-serif; font-size: clamp(2rem, 6vw, 4rem); font-weight: 800; background: linear-gradient(135deg, #c084fc, #f472b6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 0.8rem; }
+    .hero p { color: var(--muted); font-size: 1rem; }
+
+    /* ADD FORM */
+    .form-section { max-width: 700px; margin: 0 auto 3rem; padding: 0 1.5rem; }
+    .form-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 1.8rem; }
+    .form-title { font-family: 'Syne', sans-serif; font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin-bottom: 1.2rem; }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; }
+    .form-grid input { background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 8px; padding: 0.7rem 1rem; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 0.9rem; outline: none; transition: border-color 0.2s; }
+    .form-grid input:focus { border-color: var(--accent); }
+    .form-grid input::placeholder { color: var(--muted); }
+    .btn-add { margin-top: 0.8rem; width: 100%; padding: 0.85rem; background: linear-gradient(135deg, #c084fc, #f472b6); border: none; border-radius: 8px; color: #fff; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.9rem; cursor: pointer; transition: opacity 0.2s, transform 0.2s; }
+    .btn-add:hover { opacity: 0.9; transform: translateY(-1px); }
+
+    /* SNEAKER GRID */
+    .grid-section { max-width: 1100px; margin: 0 auto; padding: 0 1.5rem 4rem; }
+    .grid-title { font-family: 'Syne', sans-serif; font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent2); margin-bottom: 1.2rem; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1.2rem; }
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; transition: transform 0.2s, border-color 0.2s; }
+    .card:hover { transform: translateY(-3px); border-color: rgba(192,132,252,0.35); }
+    .card img { width: 100%; height: 180px; object-fit: cover; background: #1a1a2e; }
+    .card-body { padding: 1.1rem; }
+    .card-brand { font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.3rem; }
+    .card-name { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .card-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem; }
+    .card-price { font-size: 1.1rem; font-weight: 700; color: var(--accent2); }
+    .card-size { font-size: 0.8rem; color: var(--muted); }
+    .card-stock { display: inline-block; font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.25rem 0.6rem; border-radius: 100px; margin-bottom: 0.8rem; }
+    .in-stock { background: rgba(74,222,128,0.1); color: #4ade80; border: 1px solid rgba(74,222,128,0.2); }
+    .out-stock { background: rgba(248,113,113,0.1); color: #f87171; border: 1px solid rgba(248,113,113,0.2); }
+    .btn-delete { width: 100%; padding: 0.6rem; background: rgba(248,113,113,0.08); border: 1px solid rgba(248,113,113,0.2); border-radius: 8px; color: #f87171; font-family: 'DM Sans', sans-serif; font-size: 0.82rem; cursor: pointer; transition: background 0.2s; }
+    .btn-delete:hover { background: rgba(248,113,113,0.15); }
+
+    /* EMPTY / LOADING */
+    .empty { text-align: center; padding: 3rem; color: var(--muted); font-size: 0.95rem; }
+    .loading { text-align: center; padding: 3rem; color: var(--accent); }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="logo">👟 SneakerStore</div>
+    <div class="nav-status"><span class="dot"></span>API Connected</div>
+  </nav>
+
+  <div class="hero">
+    <h1>Sneaker Collection</h1>
+    <p>Add, view and manage sneakers — powered by Node.js + MongoDB</p>
+  </div>
+
+  <!-- ADD SNEAKER FORM -->
+  <div class="form-section">
+    <div class="form-card">
+      <div class="form-title">✦ Add New Sneaker</div>
+      <div class="form-grid">
+        <input id="name" placeholder="Sneaker name e.g. Air Max 90"/>
+        <input id="brand" placeholder="Brand e.g. Nike"/>
+        <input id="price" type="number" placeholder="Price e.g. 150"/>
+        <input id="size" type="number" placeholder="Size e.g. 42"/>
+        <input id="image" placeholder="Image URL (optional)" style="grid-column: span 2"/>
+      </div>
+      <button class="btn-add" onclick="addSneaker()">+ Add Sneaker</button>
+    </div>
+  </div>
+
+  <!-- SNEAKER GRID -->
+  <div class="grid-section">
+    <div class="grid-title">✦ All Sneakers</div>
+    <div class="grid" id="grid">
+      <div class="loading">Loading sneakers...</div>
+    </div>
+  </div>
+
+  <script>
+    // Change this to your EC2 public IP when deployed
+    // e.g. const API = 'http://YOUR_EC2_IP:5000/api/sneakers';
+    const API = 'http://localhost:5000/api/sneakers';
+
+    async function loadSneakers() {
+      try {
+        const res = await fetch(API);
+        const sneakers = await res.json();
+        const grid = document.getElementById('grid');
+        if (sneakers.length === 0) {
+          grid.innerHTML = '<div class="empty">No sneakers yet — add one above!</div>';
+          return;
+        }
+        grid.innerHTML = sneakers.map(s => `
+          <div class="card">
+            <img src="${s.image}" alt="${s.name}" onerror="this.src='https://via.placeholder.com/300x200?text=Sneaker'"/>
+            <div class="card-body">
+              <div class="card-brand">${s.brand}</div>
+              <div class="card-name">${s.name}</div>
+              <div class="card-meta">
+                <span class="card-price">$${s.price}</span>
+                <span class="card-size">Size ${s.size}</span>
+              </div>
+              <span class="card-stock ${s.inStock ? 'in-stock' : 'out-stock'}">
+                ${s.inStock ? '✓ In Stock' : '✗ Out of Stock'}
+              </span>
+              <button class="btn-delete" onclick="deleteSneaker('${s._id}')">Delete</button>
+            </div>
+          </div>
+        `).join('');
+      } catch (err) {
+        document.getElementById('grid').innerHTML = '<div class="empty">⚠️ Could not connect to API. Is the server running?</div>';
+      }
+    }
+
+    async function addSneaker() {
+      const name = document.getElementById('name').value.trim();
+      const brand = document.getElementById('brand').value.trim();
+      const price = document.getElementById('price').value;
+      const size = document.getElementById('size').value;
+      const image = document.getElementById('image').value.trim();
+      if (!name || !brand || !price || !size) return alert('Please fill in all required fields');
+      try {
+        await fetch(API, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, brand, price: +price, size: +size, image: image || undefined })
+        });
+        ['name','brand','price','size','image'].forEach(id => document.getElementById(id).value = '');
+        loadSneakers();
+      } catch (err) {
+        alert('Failed to add sneaker. Is the server running?');
+      }
+    }
+
+    async function deleteSneaker(id) {
+      if (!confirm('Delete this sneaker?')) return;
+      await fetch(`${API}/${id}`, { method: 'DELETE' });
+      loadSneakers();
+    }
+
+    loadSneakers();
+  </script>
+</body>
+</html>

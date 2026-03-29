@@ -1,0 +1,48 @@
+name: Deploy to AWS EC2
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: SSH into EC2 and deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Checkout code
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 2. Copy all files to EC2 via SCP
+      - name: Copy files to EC2
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          source: "."
+          target: "/home/ubuntu/sneaker-store"
+
+      # 3. SSH into EC2 and run deploy commands
+      - name: Deploy on EC2
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            cd /home/ubuntu/sneaker-store/backend
+
+            # Install Node dependencies
+            npm install
+
+            # Create .env file from GitHub secret
+            echo "MONGO_URI=${{ secrets.MONGO_URI }}" > .env
+            echo "PORT=5000" >> .env
+
+            # Restart the app using PM2 (keeps it running after disconnect)
+            pm2 restart sneaker-store || pm2 start server.js --name sneaker-store
+
+            echo "✅ Deployment complete!"
