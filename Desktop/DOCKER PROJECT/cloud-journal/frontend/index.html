@@ -1,0 +1,223 @@
+!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Cloud Learning Journal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0d0d1a; --accent: #c084fc; --accent2: #f472b6;
+      --text: #f0f0f0; --muted: #a0a0c0; --card: rgba(255,255,255,0.04);
+      --border: rgba(192,132,252,0.15);
+    }
+    body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; min-height: 100vh; }
+    .bg-grid { position: fixed; inset: 0; z-index: 0; background-image: linear-gradient(var(--border) 1px, transparent 1px), linear-gradient(90deg, var(--border) 1px, transparent 1px); background-size: 60px 60px; pointer-events: none; }
+ 
+    /* NAV */
+    nav { position: relative; z-index: 1; display: flex; align-items: center; justify-content: space-between; padding: 1.2rem 2rem; border-bottom: 1px solid var(--border); }
+    .logo { font-family: 'Syne', sans-serif; font-size: 1.2rem; font-weight: 800; background: linear-gradient(135deg, #c084fc, #f472b6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .nav-status { font-size: 0.78rem; color: var(--muted); display: flex; align-items: center; gap: 6px; }
+    .dot { width: 8px; height: 8px; border-radius: 50%; background: #4ade80; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+ 
+    /* HERO */
+    .hero { position: relative; z-index: 1; text-align: center; padding: 3.5rem 2rem 2.5rem; }
+    .hero h1 { font-family: 'Syne', sans-serif; font-size: clamp(2rem, 6vw, 3.8rem); font-weight: 800; background: linear-gradient(135deg, #c084fc, #f472b6, #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 0.7rem; }
+    .hero p { color: var(--muted); font-size: 1rem; max-width: 480px; margin: 0 auto; line-height: 1.7; }
+ 
+    /* STATS BAR */
+    .stats { position: relative; z-index: 1; display: flex; justify-content: center; gap: 2rem; padding: 1rem 2rem 2rem; flex-wrap: wrap; }
+    .stat { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 0.8rem 1.5rem; text-align: center; }
+    .stat-num { font-family: 'Syne', sans-serif; font-size: 1.5rem; font-weight: 800; color: var(--accent); }
+    .stat-label { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; }
+ 
+    /* FORM */
+    .form-section { position: relative; z-index: 1; max-width: 720px; margin: 0 auto 2.5rem; padding: 0 1.5rem; }
+    .form-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 1.8rem; }
+    .form-label { font-family: 'Syne', sans-serif; font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin-bottom: 1.2rem; display: block; }
+    .form-card input, .form-card textarea, .form-card select {
+      width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--border);
+      border-radius: 8px; padding: 0.75rem 1rem; color: var(--text);
+      font-family: 'DM Sans', sans-serif; font-size: 0.95rem; outline: none;
+      transition: border-color 0.2s; margin-bottom: 0.8rem;
+    }
+    .form-card input:focus, .form-card textarea:focus, .form-card select:focus { border-color: var(--accent); }
+    .form-card input::placeholder, .form-card textarea::placeholder { color: var(--muted); }
+    .form-card textarea { resize: vertical; min-height: 100px; }
+    .form-card select option { background: #1a1a2e; }
+    .btn-submit { width: 100%; padding: 0.9rem; background: linear-gradient(135deg, #c084fc, #f472b6); border: none; border-radius: 8px; color: #fff; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.9rem; cursor: pointer; transition: opacity 0.2s, transform 0.2s; }
+    .btn-submit:hover { opacity: 0.9; transform: translateY(-1px); }
+ 
+    /* FILTER TAGS */
+    .filter-section { position: relative; z-index: 1; max-width: 720px; margin: 0 auto 1.5rem; padding: 0 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; }
+    .tag-btn { padding: 0.35rem 0.9rem; border-radius: 100px; font-size: 0.78rem; font-family: 'Syne', sans-serif; cursor: pointer; border: 1px solid var(--border); background: var(--card); color: var(--muted); transition: all 0.2s; }
+    .tag-btn.active, .tag-btn:hover { background: rgba(192,132,252,0.15); border-color: var(--accent); color: var(--accent); }
+ 
+    /* ENTRIES GRID */
+    .entries-section { position: relative; z-index: 1; max-width: 720px; margin: 0 auto; padding: 0 1.5rem 4rem; }
+    .entries-title { font-family: 'Syne', sans-serif; font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent2); margin-bottom: 1rem; }
+    .entry-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 1.4rem; margin-bottom: 1rem; transition: border-color 0.2s, transform 0.2s; }
+    .entry-card:hover { border-color: rgba(192,132,252,0.3); transform: translateY(-2px); }
+    .entry-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.6rem; gap: 1rem; }
+    .entry-title { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700; }
+    .entry-tag { font-size: 0.68rem; font-family: 'Syne', sans-serif; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.25rem 0.7rem; border-radius: 100px; white-space: nowrap; }
+    .tag-aws { background: rgba(251,146,60,0.1); color: #fb923c; border: 1px solid rgba(251,146,60,0.2); }
+    .tag-docker { background: rgba(56,189,248,0.1); color: #38bdf8; border: 1px solid rgba(56,189,248,0.2); }
+    .tag-git { background: rgba(74,222,128,0.1); color: #4ade80; border: 1px solid rgba(74,222,128,0.2); }
+    .tag-devops { background: rgba(192,132,252,0.1); color: #c084fc; border: 1px solid rgba(192,132,252,0.2); }
+    .tag-linux { background: rgba(251,191,36,0.1); color: #fbbf24; border: 1px solid rgba(251,191,36,0.2); }
+    .tag-other { background: rgba(148,163,184,0.1); color: #94a3b8; border: 1px solid rgba(148,163,184,0.2); }
+    .entry-body { font-size: 0.95rem; color: var(--muted); line-height: 1.7; margin-bottom: 0.8rem; }
+    .entry-footer { display: flex; justify-content: space-between; align-items: center; }
+    .entry-date { font-size: 0.75rem; color: var(--muted); opacity: 0.6; }
+    .btn-delete { padding: 0.3rem 0.8rem; background: rgba(248,113,113,0.08); border: 1px solid rgba(248,113,113,0.2); border-radius: 6px; color: #f87171; font-size: 0.78rem; cursor: pointer; transition: background 0.2s; }
+    .btn-delete:hover { background: rgba(248,113,113,0.18); }
+    .empty { text-align: center; padding: 3rem; color: var(--muted); font-size: 0.95rem; }
+    .loading { text-align: center; padding: 2rem; color: var(--accent); font-size: 0.9rem; }
+  </style>
+</head>
+<body>
+  <div class="bg-grid"></div>
+ 
+  <nav>
+    <div class="logo">📓 Cloud Journal</div>
+    <div class="nav-status"><div class="dot"></div> API Connected</div>
+  </nav>
+ 
+  <div class="hero">
+    <h1>My Cloud Learning Journal</h1>
+    <p>Document your DevOps journey — one entry at a time. Powered by Node.js, MongoDB & Docker.</p>
+  </div>
+ 
+  <div class="stats">
+    <div class="stat"><div class="stat-num" id="total-count">0</div><div class="stat-label">Total Entries</div></div>
+    <div class="stat"><div class="stat-num" id="aws-count">0</div><div class="stat-label">AWS</div></div>
+    <div class="stat"><div class="stat-num" id="docker-count">0</div><div class="stat-label">Docker</div></div>
+    <div class="stat"><div class="stat-num" id="devops-count">0</div><div class="stat-label">DevOps</div></div>
+  </div>
+ 
+  <!-- ADD ENTRY FORM -->
+  <div class="form-section">
+    <div class="form-card">
+      <span class="form-label">✦ Add New Entry</span>
+      <input id="title" placeholder="What did you learn today?"/>
+      <textarea id="body" placeholder="Write your notes, steps, challenges and lessons here..."></textarea>
+      <select id="tag">
+        <option value="AWS">☁️ AWS</option>
+        <option value="Docker">🐳 Docker</option>
+        <option value="Git">🔀 Git</option>
+        <option value="DevOps">⚙️ DevOps</option>
+        <option value="Linux">🐧 Linux</option>
+        <option value="Other">📌 Other</option>
+      </select>
+      <button class="btn-submit" onclick="addEntry()">+ Save Entry</button>
+    </div>
+  </div>
+ 
+  <!-- FILTER TAGS -->
+  <div class="filter-section">
+    <button class="tag-btn active" onclick="filterEntries('all', this)">All</button>
+    <button class="tag-btn" onclick="filterEntries('AWS', this)">☁️ AWS</button>
+    <button class="tag-btn" onclick="filterEntries('Docker', this)">🐳 Docker</button>
+    <button class="tag-btn" onclick="filterEntries('Git', this)">🔀 Git</button>
+    <button class="tag-btn" onclick="filterEntries('DevOps', this)">⚙️ DevOps</button>
+    <button class="tag-btn" onclick="filterEntries('Linux', this)">🐧 Linux</button>
+  </div>
+ 
+  <!-- ENTRIES -->
+  <div class="entries-section">
+    <div class="entries-title">✦ Journal Entries</div>
+    <div id="entries"><div class="loading">Loading entries...</div></div>
+  </div>
+ 
+  <script>
+    // When running locally: http://localhost/api/entries
+    // When on EC2: http://YOUR_EC2_IP/api/entries
+    // Nginx proxies port 80 → backend port 5000
+    const API = '/api/entries';
+ 
+    let allEntries = [];
+ 
+    const tagClass = {
+      AWS: 'tag-aws', Docker: 'tag-docker', Git: 'tag-git',
+      DevOps: 'tag-devops', Linux: 'tag-linux', Other: 'tag-other'
+    };
+ 
+    async function loadEntries() {
+      try {
+        const res = await fetch(API);
+        allEntries = await res.json();
+        renderEntries(allEntries);
+        updateStats(allEntries);
+      } catch (err) {
+        document.getElementById('entries').innerHTML =
+          '<div class="empty">⚠️ Could not connect to API. Is Docker running?</div>';
+      }
+    }
+ 
+    function renderEntries(entries) {
+      const container = document.getElementById('entries');
+      if (entries.length === 0) {
+        container.innerHTML = '<div class="empty">No entries yet — add your first one above! 📝</div>';
+        return;
+      }
+      container.innerHTML = entries.map(e => `
+        <div class="entry-card">
+          <div class="entry-header">
+            <div class="entry-title">${e.title}</div>
+            <span class="entry-tag ${tagClass[e.tag] || 'tag-other'}">${e.tag}</span>
+          </div>
+          <div class="entry-body">${e.body}</div>
+          <div class="entry-footer">
+            <span class="entry-date">${new Date(e.createdAt).toLocaleDateString('en-GB', {day:'numeric',month:'short',year:'numeric'})}</span>
+            <button class="btn-delete" onclick="deleteEntry('${e._id}')">Delete</button>
+          </div>
+        </div>
+      `).join('');
+    }
+ 
+    function updateStats(entries) {
+      document.getElementById('total-count').textContent = entries.length;
+      document.getElementById('aws-count').textContent = entries.filter(e => e.tag === 'AWS').length;
+      document.getElementById('docker-count').textContent = entries.filter(e => e.tag === 'Docker').length;
+      document.getElementById('devops-count').textContent = entries.filter(e => e.tag === 'DevOps').length;
+    }
+ 
+    function filterEntries(tag, btn) {
+      document.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const filtered = tag === 'all' ? allEntries : allEntries.filter(e => e.tag === tag);
+      renderEntries(filtered);
+    }
+ 
+    async function addEntry() {
+      const title = document.getElementById('title').value.trim();
+      const body = document.getElementById('body').value.trim();
+      const tag = document.getElementById('tag').value;
+      if (!title || !body) return alert('Please fill in the title and notes!');
+      try {
+        await fetch(API, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ title, body, tag })
+        });
+        document.getElementById('title').value = '';
+        document.getElementById('body').value = '';
+        loadEntries();
+      } catch (err) {
+        alert('Failed to save entry. Is Docker running?');
+      }
+    }
+ 
+    async function deleteEntry(id) {
+      if (!confirm('Delete this entry?')) return;
+      await fetch(`${API}/${id}`, { method: 'DELETE' });
+      loadEntries();
+    }
+ 
+    loadEntries();
+  </script>
+</body>
+</html>

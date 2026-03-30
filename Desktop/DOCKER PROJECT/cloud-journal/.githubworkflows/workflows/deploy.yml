@@ -1,0 +1,26 @@
+ source: "."
+          target: "/home/ubuntu/cloud-journal"
+ 
+      # 3. SSH into EC2 and run Docker
+      - name: Deploy with Docker Compose
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            cd /home/ubuntu/cloud-journal
+ 
+            # Stop existing containers
+            docker-compose down
+ 
+            # Pull latest images and rebuild
+            docker-compose build --no-cache
+ 
+            # Start all containers in background
+            docker-compose up -d
+ 
+            # Show running containers
+            docker-compose ps
+ 
+            echo "✅ Deployment complete!"

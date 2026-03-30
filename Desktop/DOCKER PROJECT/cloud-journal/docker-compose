@@ -1,0 +1,26 @@
+# ── 4. NGINX (Web Server / Reverse Proxy) ──
+  nginx:
+    image: nginx:alpine
+    container_name: journal-nginx
+    restart: always
+    ports:
+      - "80:80"               # exposes port 80 to the outside world
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./frontend:/usr/share/nginx/html
+    depends_on:
+      - backend
+      - frontend
+    networks:
+      - journal-network
+ 
+# ── SHARED NETWORK ──
+# All containers talk to each other on this private network
+networks:
+  journal-network:
+    driver: bridge
+ 
+# ── PERSISTENT STORAGE ──
+# MongoDB data survives container restarts
+volumes:
+  mongo-data:
