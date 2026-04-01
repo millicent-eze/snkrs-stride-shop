@@ -1,2 +1,7 @@
-*.env
-#application.properties
+# Environment variables
+.env
+backend/.env
+
+# Config files
+application.properties
+backend/application.properties
